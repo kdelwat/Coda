@@ -1,5 +1,6 @@
 from flask import Flask, request, send_file, url_for, after_this_request
 import os
+import pypandoc
 
 from src.generate import generate
 
@@ -43,5 +44,23 @@ def download():
                      attachment_filename='grammar.md')
 
 
+def check_pandoc_on_startup():
+    '''On startup, checks if pandoc is installed. If it is, continues to main
+    application. Otherwise, pandoc will be installed.'''
+    print('Looking for pandoc...')
+
+    try:
+        version = pypandoc.get_pandoc_version()
+        print('Found version {0}'.format(version))
+
+    except OSError:
+        print('Not found! Downloading...')
+
+        pypandoc.pandoc_download.download_pandoc()
+
+        print('Download complete!')
+
+
 if __name__ == '__main__':
+    check_pandoc_on_startup()
     app.run(debug=True)
