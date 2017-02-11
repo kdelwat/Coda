@@ -1,0 +1,32 @@
+$body-family: Roboto, sans-serif;
+$header-family: Roboto, sans-serif;
+
+$background-colour: #000000;
+$text-colour: #212121;
+$light-text-colour: #757575;
+$highlight-colour: #ff5722;
+$complement-colour: #607d8b;
+
+$table-odd-colour: #fbe9e7;
+$table-even-colour: #ffccbc;
+$table-header-colour: $highlight-colour;
+
+$body-width: 60%;
+
+@import 'base';
+
+#header > .title {
+    font-weight: 300;
+}
+
+#header > .author, .date {
+    font-style: italic;
+}
+
+th {
+    color: white;
+}
+
+table {
+    border: 1px $text-colour solid;
+}

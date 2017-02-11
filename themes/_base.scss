@@ -1,0 +1,239 @@
+/* General formatting of elements, designed to be easily overwritable by child
+ * themes */
+
+body {
+    color: $text-colour;
+    width: $body-width;
+    margin: 0 auto;
+
+    font-size: 16px;
+    line-height: 1.4;
+}
+
+p {
+    font-family: $body-family;
+
+    margin: 0;
+}
+
+p ~ p {
+    margin-bottom: 1em;
+}
+
+a {
+    text-decoration: none;
+    color: $highlight-colour;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: $header-family;
+    font-weight: normal;
+
+    margin-top: 0.5em;
+    margin-bottom: 0.25em;
+}
+
+h1::after {
+    content: "";
+    display: block;
+    border-bottom: 2px $text-colour solid;
+}
+
+#header {
+    text-align: center;
+
+    margin-bottom: 2em;
+
+    & > * {
+        margin-bottom: 0;
+    }
+
+    & > .title {
+        font-size: 112px;
+        margin-top: 0;
+    }
+
+    & > .title::after {
+        border: none;
+    }
+
+    & > .author, .date {
+        font-size: 24px;
+
+        color: $light-text-colour;
+    }
+}
+
+h1 { font-size: 56px; }
+h2 { font-size: 45px; }
+h3 { font-size: 34px; }
+h4 { font-size: 24px; }
+h5 { font-size: 20px; }
+
+/* Table of contents formatting */
+
+#TOC::before {
+    content: "Contents";
+    font-size: 24px;
+
+    display: block;
+    border-bottom: 2px $text-colour solid;
+}
+
+#TOC ul {
+    list-style: none;
+    padding-left: 0;
+    font-size: 16px;
+}
+
+#TOC ul ul {
+    padding-left: 2em;
+}
+
+#TOC > ul {
+    font-size: 20px;
+}
+
+/* Table formatting */
+
+table {
+    margin: 1.5em auto;
+    border-collapse: collapse;
+}
+
+th {
+    font-weight: normal;
+}
+
+th, td, tf {
+    padding: 0.5em;
+}
+
+tr.even {
+    background-color: $table-even-colour;
+}
+
+tr.odd {
+    background-color: $table-odd-colour;
+}
+
+tr.header {
+    background-color: $table-header-colour;
+}
+
+/* Formatting for the inline word definitions, which creates definitions when
+ * words are hovered over.*/
+
+.word {
+    position: relative;
+    font-style: italic;
+
+    .definition {
+        display: none;
+    }
+
+    &:hover {
+        .definition {
+            display: inline-block;
+            background-color: white;
+            box-shadow: 0px 1px 2px $light-text-colour;
+            border-radius: 5px;
+
+            position: absolute;
+            margin-left: 2px;
+            width: 15em;
+            padding: 10px;
+            z-index: 3;
+
+            font-style: normal;
+            font-weight: bold;
+            text-align: left;
+        }
+    }
+}
+
+.full-definition {
+    font-style: italic;
+    font-weight: normal;
+    text-align: left;
+}
+
+/* Convert a div to a label in the top-right of a highlighted div */
+@mixin tag() {
+    position: absolute;
+    right: 0px;
+    top: 0px;
+
+    padding-right: 5px;
+    padding-left: 5px;
+
+    font-size: 20px;
+    color: $light-text-colour;
+}
+
+/* Create a highlight line to the left of the div */
+@mixin highlight($colour) {
+    padding-left: 40px;
+    padding-bottom: 0.4em;
+
+    margin-top: 1em;
+    margin-bottom: 1em;
+
+    &:before{
+        position: absolute;
+        display: block;
+        content: "";
+        width: 12px;
+        left: -15px;
+        height: 100%;
+        background-color: $colour;
+    }
+}
+
+/* Example formatting */
+.example {
+    @include highlight($highlight-colour);
+    position: relative;
+}
+
+.example-target, .example-target-expanded {
+    font-size: 20px;
+}
+
+.example .example-target {
+    display: inline;
+}
+
+.example .example-target-expanded {
+    display: none;
+}
+
+.example:hover .example-target {
+    display: none;
+}
+
+.example:hover .example-target-expanded {
+    display: inline;
+}
+
+.example-gloss {
+    font-variant: small-caps;
+}
+
+.example-native {
+    font-style: italic;
+}
+
+.example-tag {
+    @include tag();
+}
+
+/* Rule formatting */
+.rule {
+    @include highlight($complement-colour);
+    position: relative;
+}
+
+.rule-definition {
+    font-variant: small-caps;
+}

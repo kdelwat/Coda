@@ -1,0 +1,204 @@
+/* General formatting of elements, designed to be easily overwritable by child
+ * themes */
+body {
+  color: #212121;
+  width: 60%;
+  margin: 0 auto;
+  font-size: 16px;
+  line-height: 1.4; }
+
+p {
+  font-family: Roboto, sans-serif;
+  margin: 0; }
+
+p ~ p {
+  margin-bottom: 1em; }
+
+a {
+  text-decoration: none;
+  color: #ff5722; }
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: Roboto, sans-serif;
+  font-weight: normal;
+  margin-top: 0.5em;
+  margin-bottom: 0.25em; }
+
+h1::after {
+  content: "";
+  display: block;
+  border-bottom: 2px #212121 solid; }
+
+#header {
+  text-align: center;
+  margin-bottom: 2em; }
+  #header > * {
+    margin-bottom: 0; }
+  #header > .title {
+    font-size: 112px;
+    margin-top: 0; }
+  #header > .title::after {
+    border: none; }
+  #header > .author, #header .date {
+    font-size: 24px;
+    color: #757575; }
+
+h1 {
+  font-size: 56px; }
+
+h2 {
+  font-size: 45px; }
+
+h3 {
+  font-size: 34px; }
+
+h4 {
+  font-size: 24px; }
+
+h5 {
+  font-size: 20px; }
+
+/* Table of contents formatting */
+#TOC::before {
+  content: "Contents";
+  font-size: 24px;
+  display: block;
+  border-bottom: 2px #212121 solid; }
+
+#TOC ul {
+  list-style: none;
+  padding-left: 0;
+  font-size: 16px; }
+
+#TOC ul ul {
+  padding-left: 2em; }
+
+#TOC > ul {
+  font-size: 20px; }
+
+/* Table formatting */
+table {
+  margin: 1.5em auto;
+  border-collapse: collapse; }
+
+th {
+  font-weight: normal; }
+
+th, td, tf {
+  padding: 0.5em; }
+
+tr.even {
+  background-color: #ffccbc; }
+
+tr.odd {
+  background-color: #fbe9e7; }
+
+tr.header {
+  background-color: #ff5722; }
+
+/* Formatting for the inline word definitions, which creates definitions when
+ * words are hovered over.*/
+.word {
+  position: relative;
+  font-style: italic; }
+  .word .definition {
+    display: none; }
+  .word:hover .definition {
+    display: inline-block;
+    background-color: white;
+    box-shadow: 0px 1px 2px #757575;
+    border-radius: 5px;
+    position: absolute;
+    margin-left: 2px;
+    width: 15em;
+    padding: 10px;
+    z-index: 3;
+    font-style: normal;
+    font-weight: bold;
+    text-align: left; }
+
+.full-definition {
+  font-style: italic;
+  font-weight: normal;
+  text-align: left; }
+
+/* Convert a div to a label in the top-right of a highlighted div */
+/* Create a highlight line to the left of the div */
+/* Example formatting */
+.example {
+  padding-left: 40px;
+  padding-bottom: 0.4em;
+  margin-top: 1em;
+  margin-bottom: 1em;
+  position: relative; }
+  .example:before {
+    position: absolute;
+    display: block;
+    content: "";
+    width: 12px;
+    left: -15px;
+    height: 100%;
+    background-color: #ff5722; }
+
+.example-target, .example-target-expanded {
+  font-size: 20px; }
+
+.example .example-target {
+  display: inline; }
+
+.example .example-target-expanded {
+  display: none; }
+
+.example:hover .example-target {
+  display: none; }
+
+.example:hover .example-target-expanded {
+  display: inline; }
+
+.example-gloss {
+  font-variant: small-caps; }
+
+.example-native {
+  font-style: italic; }
+
+.example-tag {
+  position: absolute;
+  right: 0px;
+  top: 0px;
+  padding-right: 5px;
+  padding-left: 5px;
+  font-size: 20px;
+  color: #757575; }
+
+/* Rule formatting */
+.rule {
+  padding-left: 40px;
+  padding-bottom: 0.4em;
+  margin-top: 1em;
+  margin-bottom: 1em;
+  position: relative; }
+  .rule:before {
+    position: absolute;
+    display: block;
+    content: "";
+    width: 12px;
+    left: -15px;
+    height: 100%;
+    background-color: #607d8b; }
+
+.rule-definition {
+  font-variant: small-caps; }
+
+#header > .title {
+  font-weight: 300; }
+
+#header > .author, .date {
+  font-style: italic; }
+
+th {
+  color: white; }
+
+table {
+  border: 1px #212121 solid; }
+
+/*# sourceMappingURL=Default.css.map */
