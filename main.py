@@ -1,4 +1,4 @@
-from flask import Flask, request
+from flask import Flask, request, send_file
 import json
 
 from src.generate import generate
@@ -26,10 +26,16 @@ def index():
         else:
             markdown_file_strings.append(str(blob.read(), 'utf-8'))
 
-    generate(markdown_file_strings, lexicon_file_string, settings)
+    print(markdown_file_strings)
+    filename = generate(markdown_file_strings, lexicon_file_string, settings)
 
-    return json.dumps({'success': True}), 200, {'ContentType':
-                                                'application/json'}
+    return filename
+
+
+@app.route('/download')
+def download():
+    filename = request.args.get('filename')
+    return send_file(filename)
 
 
 if __name__ == '__main__':
