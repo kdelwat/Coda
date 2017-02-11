@@ -1,5 +1,5 @@
-from flask import Flask, request, send_file
-import json
+from flask import Flask, request, send_file, url_for, after_this_request
+import os
 
 from src.generate import generate
 
@@ -28,7 +28,6 @@ def index():
 
     print(markdown_file_strings)
     filename = generate(markdown_file_strings, lexicon_file_string, settings)
-
     return filename
 
 
@@ -37,10 +36,13 @@ def download():
     filename = request.args.get('filename')
     print('Received request with filename {0}'.format(filename))
 
+    file_handle = open(filename, 'r')
+
     if filename.endswith('.md'):
         mimetype = 'text/markdown'
 
-    return send_file(filename, mimetype=mimetype)
+    return send_file(file_handle, mimetype=mimetype, as_attachment=True,
+                     attachment_filename='grammar.md')
 
 
 if __name__ == '__main__':
