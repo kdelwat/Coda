@@ -26,8 +26,8 @@ def index():
         else:
             markdown_file_strings.append(str(blob.read(), 'utf-8'))
 
-    print(markdown_file_strings)
     filename = generate(markdown_file_strings, lexicon_file_string, settings)
+
     return filename
 
 
@@ -36,12 +36,10 @@ def download():
     filename = request.args.get('filename')
     print('Received request with filename {0}'.format(filename))
 
-    file_handle = open(filename, 'r')
-
     if filename.endswith('.md'):
-        mimetype = 'text/markdown'
+        mimetype = 'text/markdown; charset=utf-8'
 
-    return send_file(file_handle, mimetype=mimetype, as_attachment=True,
+    return send_file(filename, mimetype=mimetype, as_attachment=True,
                      attachment_filename='grammar.md')
 
 
