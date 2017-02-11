@@ -35,7 +35,12 @@ def index():
 @app.route('/download')
 def download():
     filename = request.args.get('filename')
-    return send_file(filename)
+    print('Received request with filename {0}'.format(filename))
+
+    if filename.endswith('.md'):
+        mimetype = 'text/markdown'
+
+    return send_file(filename, mimetype=mimetype)
 
 
 if __name__ == '__main__':
