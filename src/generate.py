@@ -26,8 +26,41 @@ def generate(markdown_file_strings, lexicon_file, settings):
                                  title=settings['grammarTitle'],
                                  subtitle=settings['grammarSubtitle'],
                                  author=settings['author'])
+    elif settings['format'] == 'LaTeX PDF':
+        filename = generate_latex(concatenated_markdown, lexicon_file,
+                                  theme=settings['theme'],
+                                  title=settings['grammarTitle'],
+                                  subtitle=settings['grammarSubtitle'],
+                                  author=settings['author'])
 
     return filename
+
+
+def generate_latex(markdown, lexicon, theme='Default', title='My language',
+                   subtitle='A grammar', author='An author'):
+    '''Takes a markdown string, a lexicon CSV string, and a number of settings.
+    Creates a PDF document and returns the filename.'''
+
+    # Create list of pandoc settings, including template file
+    pandoc_arguments = ['--standalone',
+                        '--toc',
+                        '--smart',
+                        '--latex-engine=xelatex']
+
+    template_directory = os.path.join(base_directory, 'latexthemes')
+    template_name = '{0}.tex'.format(theme)
+    template_path = os.path.join(template_directory, template_name)
+    pandoc_arguments.append('--template={0}'.format(template_path))
+
+    # Create temporary filename for output
+    temp_filename = 'grammar.pdf'
+    temp_path = os.path.join(base_directory, 'temp', temp_filename)
+
+    pypandoc.convert_text(markdown, format='md', to='pdf',
+                          outputfile=temp_path,
+                          extra_args=pandoc_arguments)
+
+    return temp_path
 
 
 def generate_HTML(markdown, lexicon, theme='Default', title='My language',
