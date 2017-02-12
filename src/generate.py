@@ -45,7 +45,8 @@ def generate_latex(markdown, lexicon, theme='Default', title='My language',
     pandoc_arguments = ['--standalone',
                         '--toc',
                         '--smart',
-                        '--latex-engine=xelatex']
+                        '--latex-engine=xelatex',
+                        '--top-level-division=chapter']
 
     template_directory = os.path.join(base_directory, 'latexthemes')
     template_name = '{0}.tex'.format(theme)
