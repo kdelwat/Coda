@@ -15,6 +15,13 @@ EXAMPLE_BLOCK_TEMPLATE = '''
 </div>
 '''
 
+RULE_TEMPLATE = '''
+<div class="rule">
+    <div class="rule-name">$name</div>
+    <div class="rule-definition">$definition</div>
+</div>
+'''
+
 
 def strip_example(example):
     '''Takes a full example string, including hyphens and null morphemes, and
@@ -48,11 +55,23 @@ def create_example(number, elem):
     return pf.RawBlock(example_block.substitute(block_settings), format='html')
 
 
+def create_rule(elem):
+    '''Create a rule HTML block.'''
+    name, definition = pf.stringify(elem)[3:].split(':')
+
+    substitutions = dict(name=name, definition=definition)
+    rule_HTML = string.Template(RULE_TEMPLATE).substitute(substitutions)
+
+    return pf.RawBlock(rule_HTML, format='html')
+
+
 def linguistic_features(elem, doc):
     ''' Detect individual syntax features and delegate to their creation
     functions.'''
     if type(elem) == pf.OrderedList and elem.style == 'Example':
         return create_example(elem.start, elem)
+    elif type(elem) == pf.Para and pf.stringify(elem).startswith('(*)'):
+        return create_rule(elem)
     else:
         return elem
 
