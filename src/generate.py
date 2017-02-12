@@ -21,6 +21,9 @@ title: $title
 subtitle: $subtitle
 author: $author
 year: $year
+papersize: $papersize
+geometry: $geometry
+fontsize: $fontsize
 ---
 '''
 
@@ -46,7 +49,7 @@ def generate(markdown_file_strings, lexicon_file, settings):
 
 
 def generate_latex(markdown, lexicon, theme='Default', title='My language',
-                   subtitle='A grammar', author='An author'):
+                   subtitle='A grammar', author='An author', layout='A4'):
     '''Takes a markdown string, a lexicon CSV string, and a number of settings.
     Creates a PDF document and returns the filename.'''
 
@@ -54,10 +57,27 @@ def generate_latex(markdown, lexicon, theme='Default', title='My language',
     # string.
     year = time.strftime('%Y')
 
+    layouts = {'A4': {'papersize': 'a4paper',
+                      'geometry':
+                      'top=3cm,bottom=3cm,left=3cm,right=3cm,headsep=10pt,',
+                      'fontsize': '11pt'},
+
+               'A5': {'papersize': 'a5paper',
+                      'geometry':
+                      'top=1.5cm,bottom=1.5cm,left=1.75cm,right=1.75cm,headsep=10pt,',
+                      'fontsize': '12pt'}}
+
+    paper = layouts[layout]['papersize']
+    font = layouts[layout]['fontsize']
+    geometry = layouts[layout]['geometry']
+
     metadata = string.Template(METADATA_TEMPLATE).substitute(title=title,
                                                              subtitle=subtitle,
                                                              author=author,
-                                                             year=year)
+                                                             year=year,
+                                                             papersize=paper,
+                                                             fontsize=font,
+                                                             geometry=geometry)
 
     markdown = metadata + markdown
 
