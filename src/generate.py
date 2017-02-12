@@ -1,9 +1,19 @@
 import time
 import pypandoc
 import os
+import re
+import csv
+import string
 
 base_directory = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-print(base_directory)
+
+DEFINITION_TEMPLATE = '''
+<span class="word">$word
+    <span class="definition">$local_word ($part)<br>
+        <span class="full-definition">$definition</span>
+    </span>
+</span>
+'''
 
 
 def generate(markdown_file_strings, lexicon_file, settings):
@@ -57,6 +67,9 @@ def generate_HTML(markdown, lexicon, theme='Default', title='My language',
                                  extra_args=pandoc_arguments,
                                  filters=[filter_path])
 
+    # Replace dictionary words in the HTML with their definitions
+    html = load_words_from_lexicon(html, lexicon)
+
     # Save the HTML to a temporary file
     # temp_filename = 'temp/{0}.html'.format(str(time.time()))
     temp_filename = 'grammar.html'
@@ -64,3 +77,52 @@ def generate_HTML(markdown, lexicon, theme='Default', title='My language',
         f.write(html)
 
     return temp_filename
+
+
+def load_words_from_lexicon(html, lexicon_string):
+    '''Replace all words surrounded by double curly braces in the HTML string
+    (created by the filter) with their dictionary definition according to the
+    given lexicon.'''
+
+    # Read the lexicon string as a CSV file.
+    lexicon = convert_lexicon(lexicon_string)
+
+    match_list = re.findall(r'{{[a-z]*}}', html, re.I)
+
+    for match in match_list:
+        word = match[2:-2]
+        try:
+            local_word = lexicon[word]['local_word']
+            definition = lexicon[word]['definition']
+            part = lexicon[word]['part_of_speech']
+
+            definition_block = string.Template(DEFINITION_TEMPLATE)
+            definition_HTML = definition_block.substitute(word=word,
+                                                          local_word=local_word,
+                                                          definition=definition,
+                                                          part=part)
+
+            html = html.replace(match, definition_HTML)
+
+        except KeyError:
+            pass
+
+    return html
+
+
+def convert_lexicon(lexicon_string):
+    '''Convert a lexicon string (CSV) to a dictionary. Each key is a word and
+    each value is a dictionary containing information about the word.'''
+    word_lines = csv.reader(lexicon_string.split('\n'))
+
+    lexicon = {}
+    for line in word_lines:
+        try:
+            word_data = {'local_word': line[1],
+                         'definition': line[4],
+                         'part_of_speech': line[2]}
+            lexicon[line[0]] = word_data
+        except IndexError:
+            pass
+
+    return lexicon
