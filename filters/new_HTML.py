@@ -65,6 +65,13 @@ def create_rule(elem):
     return pf.RawBlock(rule_HTML, format='html')
 
 
+def create_definition(elem):
+    '''Surround language words in double brackets, for later processing.'''
+    word = pf.stringify(elem)
+
+    return pf.RawInline('{{' + word + '}}')
+
+
 def linguistic_features(elem, doc):
     ''' Detect individual syntax features and delegate to their creation
     functions.'''
@@ -72,6 +79,8 @@ def linguistic_features(elem, doc):
         return create_example(elem.start, elem)
     elif type(elem) == pf.Para and pf.stringify(elem).startswith('(*)'):
         return create_rule(elem)
+    elif type(elem) == pf.Code:
+        return create_definition(elem)
     else:
         return elem
 
