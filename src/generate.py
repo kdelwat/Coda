@@ -15,6 +15,15 @@ DEFINITION_TEMPLATE = '''
 </span>
 '''
 
+METADATA_TEMPLATE = '''
+---
+title: $title
+subtitle: $subtitle
+author: $author
+year: $year
+---
+'''
+
 
 def generate(markdown_file_strings, lexicon_file, settings):
 
@@ -40,6 +49,17 @@ def generate_latex(markdown, lexicon, theme='Default', title='My language',
                    subtitle='A grammar', author='An author'):
     '''Takes a markdown string, a lexicon CSV string, and a number of settings.
     Creates a PDF document and returns the filename.'''
+
+    # Create a metadata block and add it to the beginning of the markdown
+    # string.
+    year = time.strftime('%Y')
+
+    metadata = string.Template(METADATA_TEMPLATE).substitute(title=title,
+                                                             subtitle=subtitle,
+                                                             author=author,
+                                                             year=year)
+
+    markdown = metadata + markdown
 
     # Create list of pandoc settings, including template file
     pandoc_arguments = ['--standalone',
