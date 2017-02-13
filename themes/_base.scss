@@ -237,3 +237,21 @@ tr.header {
 .rule-definition {
     font-variant: small-caps;
 }
+
+/* Lexicon formatting */
+.lexicon-entry {
+  margin-bottom: 1em;
+}
+
+.lexicon-word {
+  display: inline;
+}
+
+.lexicon-info {
+  display: inline;
+  font-style: italic;
+}
+
+.lexicon-local {
+  font-weight: bold;
+}

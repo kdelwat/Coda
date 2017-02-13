@@ -36,7 +36,7 @@ HTML_DICTIONARY_ENTRY_TEMPLATE = '''
 <div class="lexicon-entry">
 <h3 class="lexicon-word">$word</h5>
 <h4 class="lexicon-info">$pronunciation, $part_of_speech</h4>
-<p class="lexicon-definition">$local_word: $definition</p>
+<p class="lexicon-definition"><span class="lexicon-local">$local_word</span> $definition</p>
 </div>
 '''
 
@@ -205,9 +205,6 @@ def create_html_dictionary(lexicon_string, lexicon_columns):
     entry_template = string.Template(HTML_DICTIONARY_ENTRY_TEMPLATE)
 
     for group in groups:
-        # Add letter label
-        definitions += '<h2 class="lexicon-letter">' + group[0].upper() + '</h4>'
-
         for word in group[1]:
             entry = entry_template.substitute(word)
             definitions += entry
