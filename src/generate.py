@@ -7,8 +7,8 @@ import string
 from itertools import groupby
 import yaml
 
-LEXICON_COLUMN_DEFAULTS = {'word': 0, 'local': 1, 'part_of_speech': 2,
-                           'definition': 3}
+LEXICON_COLUMN_DEFAULTS = {'word': 0, 'local': 1, 'part_of_speech': 3,
+                           'definition': 4, 'pronunciation': 2}
 
 base_directory = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -24,7 +24,7 @@ DEFINITION_TEMPLATE = '''
 '''
 
 DICTIONARY_ENTRY_TEMPLATE = '''
-\entry{$word}{$word}{$part_of_speech}{$local_word: $definition}
+\entry{$word}{$pronunciation}{$part_of_speech}{$local_word: $definition}
 '''
 
 METADATA_TEMPLATE = '''
@@ -269,6 +269,7 @@ def convert_lexicon(lexicon_string, lexicon_columns):
         try:
             word_data = {'local_word': line[lexicon_columns['local']],
                          'definition': line[lexicon_columns['definition']],
+                         'pronunciation': line[lexicon_columns['pronunciation']],
                          'part_of_speech': line[lexicon_columns['part_of_speech']]}
             lexicon[line[lexicon_columns['word']]] = word_data
         except IndexError:
