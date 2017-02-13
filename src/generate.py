@@ -27,6 +27,19 @@ DICTIONARY_ENTRY_TEMPLATE = '''
 \entry{$word}{$pronunciation}{$part_of_speech}{$local_word: $definition}
 '''
 
+HTML_DICTIONARY_TEMPLATE = '''
+# Lexicon
+$definitions
+'''
+
+HTML_DICTIONARY_ENTRY_TEMPLATE = '''
+<div class="lexicon-entry">
+<h3 class="lexicon-word">$word</h5>
+<h4 class="lexicon-info">$pronunciation, $part_of_speech</h4>
+<p class="lexicon-definition">$local_word: $definition</p>
+</div>
+'''
+
 METADATA_TEMPLATE = '''
 ---
 title: $title
@@ -42,7 +55,6 @@ dictionary: $dictionary
 
 
 def generate(markdown_file_strings, lexicon_file, settings):
-
     concatenated_markdown = '\n'.join(markdown_file_strings)
 
     if settings['format'] == 'HTML':
@@ -71,6 +83,7 @@ def generate_latex(markdown, lexicon, lexicon_columns=LEXICON_COLUMN_DEFAULTS,
 
     # Create the lexicon as a LaTeX string.
     dictionary_string = create_latex_dictionary(lexicon, lexicon_columns)
+
 
     # Create a metadata block and add it to the beginning of the markdown
     # string.
@@ -131,10 +144,17 @@ def generate_HTML(markdown, lexicon, lexicon_columns=LEXICON_COLUMN_DEFAULTS,
 
     # Create a metadata block and add it to the beginning of the markdown
     # string.
-    metadata = '% {0}\n% {1}\n% {2}\n'.format(title, author,
-                                              time.strftime('%d/%m/%Y'))
+    metadata = {'title': title,
+                'author': author,
+                'date': time.strftime('%d/%m/%Y')}
 
-    markdown = metadata + markdown
+    # Format metadata as YAML and add it before the rest of the file.
+    markdown = '---\n' + yaml.dump(metadata) + '\n---\n' + markdown
+
+    # Create the lexicon as a Markdown string and add it to the end of the
+    # file.
+    dictionary_string = create_html_dictionary(lexicon, lexicon_columns)
+    markdown = markdown + dictionary_string
 
     # Create list of pandoc settings, including theme files
     pandoc_arguments = ['--standalone',
@@ -170,7 +190,30 @@ def generate_HTML(markdown, lexicon, lexicon_columns=LEXICON_COLUMN_DEFAULTS,
     with open(os.path.join(base_directory, 'temp', temp_filename), 'w') as f:
         f.write(html)
 
+
     return temp_filename
+
+
+def create_html_dictionary(lexicon_string, lexicon_columns):
+    '''Convert the given lexicon string to a Markdown dictionary string for use in
+    HTML.'''
+    definitions = ''
+
+    # Group words by letter
+    groups = get_lexicon_groups(lexicon_string, lexicon_columns)
+
+    entry_template = string.Template(HTML_DICTIONARY_ENTRY_TEMPLATE)
+
+    for group in groups:
+        # Add letter label
+        definitions += '<h2 class="lexicon-letter">' + group[0].upper() + '</h4>'
+
+        for word in group[1]:
+            entry = entry_template.substitute(word)
+            definitions += entry
+
+    # Substitute the created string into the template.
+    return string.Template(HTML_DICTIONARY_TEMPLATE).substitute(definitions=definitions)
 
 
 def create_latex_dictionary(lexicon_string, lexicon_columns):
