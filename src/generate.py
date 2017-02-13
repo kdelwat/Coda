@@ -4,6 +4,7 @@ import os
 import re
 import csv
 import string
+import copy
 from itertools import groupby
 import yaml
 
@@ -57,20 +58,42 @@ dictionary: $dictionary
 def generate(markdown_file_strings, lexicon_file, settings):
     concatenated_markdown = '\n'.join(markdown_file_strings)
 
+    lexicon_columns = read_lexicon_columns(settings)
+    print(lexicon_columns)
     if settings['format'] == 'HTML':
         filename = generate_HTML(concatenated_markdown, lexicon_file,
+                                 lexicon_columns=lexicon_columns,
                                  theme=settings['theme'],
                                  title=settings['grammarTitle'],
                                  subtitle=settings['grammarSubtitle'],
                                  author=settings['author'])
     elif settings['format'] == 'LaTeX PDF':
         filename = generate_latex(concatenated_markdown, lexicon_file,
+                                  lexicon_columns=lexicon_columns,
                                   theme=settings['theme'],
                                   title=settings['grammarTitle'],
                                   subtitle=settings['grammarSubtitle'],
                                   author=settings['author'])
 
     return filename
+
+
+def read_lexicon_columns(settings):
+    '''Given a settings dictionary, return a lexicon columns dictionary.'''
+    equivalents = {'csvColumnWord': 'word',
+                   'csvColumnLocal': 'local',
+                   'csvColumnDefinition': 'definition',
+                   'csvColumnPronunciation': 'pronunciation',
+                   'csvColumnPartOfSpeech': 'part_of_speech'}
+
+    columns = {}
+
+    # Add an entry to overrides for each column included in the request.
+    for old, new in equivalents.items():
+        if old in settings:
+            columns[new] = settings[old]
+
+    return columns
 
 
 def generate_latex(markdown, lexicon, lexicon_columns=LEXICON_COLUMN_DEFAULTS,

@@ -7,15 +7,19 @@ from src.generate import generate
 app = Flask(__name__)
 
 available_settings = ['grammarTitle', 'grammarSubtitle', 'author', 'format',
-                      'theme']
+                      'theme', 'csvColumnWord', 'csvColumnLocal',
+                      'csvColumnDefinition', 'csvColumnPronunciation',
+                      'csvColumnPartOfSpeech']
+
 
 @app.route('/', methods=['POST'])
 def index():
-
     # Get all available string settings from posted object
     settings = {}
     for key in available_settings:
         settings[key] = request.form.get(key, None)
+
+    print(settings)
 
     # Loop through the files posted to the endpoint, reading all
     # files as strings.
