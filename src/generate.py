@@ -90,8 +90,10 @@ def read_lexicon_columns(settings):
 
     # Add an entry to overrides for each column included in the request.
     for old, new in equivalents.items():
+        print(old, new)
+        print(settings)
         if old in settings:
-            columns[new] = settings[old]
+            columns[new] = int(settings[old])
 
     return columns
 
@@ -269,7 +271,6 @@ def get_lexicon_groups(lexicon_string, lexicon_columns):
 
     # Read the lexicon string as a CSV file, deleting the header row.
     lexicon_dicts = convert_lexicon(lexicon_string, lexicon_columns)
-    del lexicon_dicts['Conword']
 
     # Convert to a list.
     lexicon = list(zip(lexicon_dicts.keys(), lexicon_dicts.values()))
@@ -325,7 +326,7 @@ def load_words_from_lexicon(html, lexicon_string, lexicon_columns):
 def convert_lexicon(lexicon_string, lexicon_columns):
     '''Convert a lexicon string (CSV) to a dictionary. Each key is a word and
     each value is a dictionary containing information about the word.'''
-    word_lines = csv.reader(lexicon_string.split('\n'))
+    word_lines = list(csv.reader(lexicon_string.split('\n')))[1:]
 
     lexicon = {}
     for line in word_lines:
