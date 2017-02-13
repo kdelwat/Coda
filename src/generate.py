@@ -4,8 +4,13 @@ import os
 import re
 import csv
 import string
+from itertools import groupby
+import yaml
 
 base_directory = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+with open(os.path.join(base_directory, 'latexthemes', 'Dictionary.tex')) as f:
+    DICTIONARY_TEMPLATE = f.read()
 
 DEFINITION_TEMPLATE = '''
 <span class="word">$word
@@ -13,6 +18,10 @@ DEFINITION_TEMPLATE = '''
         <span class="full-definition">$definition</span>
     </span>
 </span>
+'''
+
+DICTIONARY_ENTRY_TEMPLATE = '''
+\entry{$word}{$word}{$part_of_speech}{$local_word: $definition}
 '''
 
 METADATA_TEMPLATE = '''
@@ -24,6 +33,7 @@ year: $year
 papersize: $papersize
 geometry: $geometry
 fontsize: $fontsize
+dictionary: $dictionary
 ---
 '''
 
@@ -53,6 +63,11 @@ def generate_latex(markdown, lexicon, theme='Default', title='My language',
     '''Takes a markdown string, a lexicon CSV string, and a number of settings.
     Creates a PDF document and returns the filename.'''
 
+    template_directory = os.path.join(base_directory, 'latexthemes')
+
+    # Create the lexicon as a LaTeX string.
+    dictionary_string = create_latex_dictionary(lexicon)
+
     # Create a metadata block and add it to the beginning of the markdown
     # string.
     year = time.strftime('%Y')
@@ -71,15 +86,12 @@ def generate_latex(markdown, lexicon, theme='Default', title='My language',
     font = layouts[layout]['fontsize']
     geometry = layouts[layout]['geometry']
 
-    metadata = string.Template(METADATA_TEMPLATE).substitute(title=title,
-                                                             subtitle=subtitle,
-                                                             author=author,
-                                                             year=year,
-                                                             papersize=paper,
-                                                             fontsize=font,
-                                                             geometry=geometry)
+    metadata = {'title': title, 'subtitle': subtitle, 'author': author, 'year':
+                year, 'fontsize': font, 'papersize': paper, 'geometry':
+                geometry, 'dictionary': dictionary_string}
 
-    markdown = metadata + markdown
+    # Format metadata as YAML and add it before the rest of the file.
+    markdown = '---\n' + yaml.dump(metadata) + '\n---\n' + markdown
 
     # Create list of pandoc settings, including template file
     pandoc_arguments = ['--standalone',
@@ -88,7 +100,6 @@ def generate_latex(markdown, lexicon, theme='Default', title='My language',
                         '--latex-engine=xelatex',
                         '--top-level-division=chapter']
 
-    template_directory = os.path.join(base_directory, 'latexthemes')
     template_name = '{0}.tex'.format(theme)
     template_path = os.path.join(template_directory, template_name)
     pandoc_arguments.append('--template={0}'.format(template_path))
@@ -155,6 +166,61 @@ def generate_HTML(markdown, lexicon, theme='Default', title='My language',
         f.write(html)
 
     return temp_filename
+
+
+def create_latex_dictionary(lexicon_string):
+    '''Convert the given lexicon string to a LaTeX dictionary string.'''
+    definitions = ''
+
+    # Group words by letter
+    groups = get_lexicon_groups(lexicon_string)
+
+    entry_template = string.Template(DICTIONARY_ENTRY_TEMPLATE)
+
+    for group in groups:
+        # Add letter label
+        definitions += '\\section*{' + group[0].upper() + '}'
+
+        definitions += '\\begin{multicols*}{2}'
+
+        for word in group[1]:
+            entry = entry_template.substitute(word)
+            definitions += entry
+
+        definitions += '\\end{multicols*}'
+
+    # Substitute the created string into the template.
+    return string.Template(DICTIONARY_TEMPLATE).substitute(definitions=definitions)
+
+
+def get_lexicon_groups(lexicon_string):
+    '''Given a lexicon string, return a list. Each item is a tuple, where the first
+    item is a letter and the second is a list of word dictionaries that begin with
+    that letter.'''
+    groups = []
+
+    # Read the lexicon string as a CSV file, deleting the header row.
+    lexicon_dicts = convert_lexicon(lexicon_string)
+    del lexicon_dicts['Conword']
+
+    # Convert to a list.
+    lexicon = list(zip(lexicon_dicts.keys(), lexicon_dicts.values()))
+
+    # Sort alphabetically
+    lexicon = sorted(lexicon, key=lambda x: x[0])
+
+    # Group by first letter
+    for first_letter, words in groupby(lexicon, lambda x: x[0][0]):
+        # Add the conlang word to each word dictionary
+        modified_words = []
+        for word in words:
+            modified_word = word[1]
+            modified_word['word'] = word[0]
+            modified_words.append(modified_word)
+
+        groups.append((first_letter, modified_words))
+
+    return groups
 
 
 def load_words_from_lexicon(html, lexicon_string):
