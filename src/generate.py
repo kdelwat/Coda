@@ -8,7 +8,7 @@ from itertools import groupby
 import yaml
 
 LEXICON_COLUMN_DEFAULTS = {'word': 0, 'local': 1, 'part_of_speech': 3,
-                           'definition': 4, 'pronunciation': 2}
+                           'definition': 5, 'pronunciation': 2}
 
 base_directory = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
