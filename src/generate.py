@@ -7,6 +7,9 @@ import string
 from itertools import groupby
 import yaml
 
+LEXICON_COLUMN_DEFAULTS = {'word': 0, 'local': 1, 'part_of_speech': 2,
+                           'definition': 3}
+
 base_directory = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 with open(os.path.join(base_directory, 'latexthemes', 'Dictionary.tex')) as f:
@@ -58,15 +61,16 @@ def generate(markdown_file_strings, lexicon_file, settings):
     return filename
 
 
-def generate_latex(markdown, lexicon, theme='Default', title='My language',
-                   subtitle='A grammar', author='An author', layout='A4'):
+def generate_latex(markdown, lexicon, lexicon_columns=LEXICON_COLUMN_DEFAULTS,
+                   theme='Default', title='My language', subtitle='A grammar',
+                   author='An author', layout='A4'):
     '''Takes a markdown string, a lexicon CSV string, and a number of settings.
     Creates a PDF document and returns the filename.'''
 
     template_directory = os.path.join(base_directory, 'latexthemes')
 
     # Create the lexicon as a LaTeX string.
-    dictionary_string = create_latex_dictionary(lexicon)
+    dictionary_string = create_latex_dictionary(lexicon, lexicon_columns)
 
     # Create a metadata block and add it to the beginning of the markdown
     # string.
@@ -119,8 +123,9 @@ def generate_latex(markdown, lexicon, theme='Default', title='My language',
     return temp_path
 
 
-def generate_HTML(markdown, lexicon, theme='Default', title='My language',
-                  subtitle='A grammar', author='An author'):
+def generate_HTML(markdown, lexicon, lexicon_columns=LEXICON_COLUMN_DEFAULTS,
+                  theme='Default', title='My language', subtitle='A grammar',
+                  author='An author'):
     '''Takes a markdown string, a lexicon CSV string, and a number of settings.
     Creates a full HTML document and returns the filename.'''
 
@@ -157,7 +162,7 @@ def generate_HTML(markdown, lexicon, theme='Default', title='My language',
                                  filters=[filter_path])
 
     # Replace dictionary words in the HTML with their definitions
-    html = load_words_from_lexicon(html, lexicon)
+    html = load_words_from_lexicon(html, lexicon, lexicon_columns)
 
     # Save the HTML to a temporary file
     # temp_filename = 'temp/{0}.html'.format(str(time.time()))
@@ -168,12 +173,12 @@ def generate_HTML(markdown, lexicon, theme='Default', title='My language',
     return temp_filename
 
 
-def create_latex_dictionary(lexicon_string):
+def create_latex_dictionary(lexicon_string, lexicon_columns):
     '''Convert the given lexicon string to a LaTeX dictionary string.'''
     definitions = ''
 
     # Group words by letter
-    groups = get_lexicon_groups(lexicon_string)
+    groups = get_lexicon_groups(lexicon_string, lexicon_columns)
 
     entry_template = string.Template(DICTIONARY_ENTRY_TEMPLATE)
 
@@ -193,14 +198,14 @@ def create_latex_dictionary(lexicon_string):
     return string.Template(DICTIONARY_TEMPLATE).substitute(definitions=definitions)
 
 
-def get_lexicon_groups(lexicon_string):
+def get_lexicon_groups(lexicon_string, lexicon_columns):
     '''Given a lexicon string, return a list. Each item is a tuple, where the first
     item is a letter and the second is a list of word dictionaries that begin with
     that letter.'''
     groups = []
 
     # Read the lexicon string as a CSV file, deleting the header row.
-    lexicon_dicts = convert_lexicon(lexicon_string)
+    lexicon_dicts = convert_lexicon(lexicon_string, lexicon_columns)
     del lexicon_dicts['Conword']
 
     # Convert to a list.
@@ -223,13 +228,13 @@ def get_lexicon_groups(lexicon_string):
     return groups
 
 
-def load_words_from_lexicon(html, lexicon_string):
+def load_words_from_lexicon(html, lexicon_string, lexicon_columns):
     '''Replace all words surrounded by double curly braces in the HTML string
     (created by the filter) with their dictionary definition according to the
     given lexicon.'''
 
     # Read the lexicon string as a CSV file.
-    lexicon = convert_lexicon(lexicon_string)
+    lexicon = convert_lexicon(lexicon_string, lexicon_columns)
 
     match_list = re.findall(r'{{[a-z]*}}', html, re.I)
 
@@ -254,7 +259,7 @@ def load_words_from_lexicon(html, lexicon_string):
     return html
 
 
-def convert_lexicon(lexicon_string):
+def convert_lexicon(lexicon_string, lexicon_columns):
     '''Convert a lexicon string (CSV) to a dictionary. Each key is a word and
     each value is a dictionary containing information about the word.'''
     word_lines = csv.reader(lexicon_string.split('\n'))
@@ -262,10 +267,10 @@ def convert_lexicon(lexicon_string):
     lexicon = {}
     for line in word_lines:
         try:
-            word_data = {'local_word': line[1],
-                         'definition': line[4],
-                         'part_of_speech': line[2]}
-            lexicon[line[0]] = word_data
+            word_data = {'local_word': line[lexicon_columns['local']],
+                         'definition': line[lexicon_columns['definition']],
+                         'part_of_speech': line[lexicon_columns['part_of_speech']]}
+            lexicon[line[lexicon_columns['word']]] = word_data
         except IndexError:
             pass
 
