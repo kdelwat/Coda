@@ -97,9 +97,13 @@ def generate_latex(markdown, lexicon, theme='Default', title='My language',
     temp_filename = 'grammar.pdf'
     temp_path = os.path.join(base_directory, 'temp', temp_filename)
 
+    # Define the filters to use
+    filter_path = os.path.join(base_directory, 'filters', 'LaTeX.py')
+
     pypandoc.convert_text(markdown, format='md', to='pdf',
                           outputfile=temp_path,
-                          extra_args=pandoc_arguments)
+                          extra_args=pandoc_arguments,
+                          filters=[filter_path])
 
     return temp_path
 
