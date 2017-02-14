@@ -255,3 +255,19 @@ tr.header {
 .lexicon-local {
   font-weight: bold;
 }
+
+/* Image formatting */
+.figure {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 2em 0;
+
+  img {
+    width: 75%
+  }
+
+  .caption {
+    font-style: italic;
+  }
+}
