@@ -1,6 +1,7 @@
 from flask import Flask, request, send_file, url_for, after_this_request
 import os
 import pypandoc
+import io
 
 from src.generate import generate
 
@@ -56,7 +57,14 @@ def download():
     else:
         return 'File not found', 404
 
-    return send_file(filepath, mimetype=mimetype, as_attachment=True,
+    # Read the file into a BytesIO object, allowing it to be deleted before the
+    # request is fulfilled.
+    with open(filepath, 'rb') as f:
+        file_object = io.BytesIO(f.read())
+
+    os.remove(filepath)
+
+    return send_file(file_object, mimetype=mimetype, as_attachment=True,
                      attachment_filename=attachment_filename)
 
 
