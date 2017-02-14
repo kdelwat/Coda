@@ -38,6 +38,7 @@ def index():
         return filename
     except Exception as e:
         print(type(e).__name__)
+        print(e)
         return 'ERROR' + str(e)
 
 

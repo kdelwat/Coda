@@ -103,6 +103,7 @@ def generate_latex(markdown, lexicon, lexicon_columns=LEXICON_COLUMN_DEFAULTS,
     Creates a PDF document and returns the filename.'''
 
     template_directory = os.path.join(base_directory, 'latexthemes')
+    image_path = os.path.join(template_directory, 'images')
 
     # Create the lexicon as a LaTeX string.
     dictionary_string = create_latex_dictionary(lexicon, lexicon_columns)
@@ -127,7 +128,8 @@ def generate_latex(markdown, lexicon, lexicon_columns=LEXICON_COLUMN_DEFAULTS,
 
     metadata = {'title': title, 'subtitle': subtitle, 'author': author, 'year':
                 year, 'fontsize': font, 'papersize': paper, 'geometry':
-                geometry, 'dictionary': dictionary_string}
+                geometry, 'dictionary': dictionary_string,
+                'imagepath': image_path}
 
     # Format metadata as YAML and add it before the rest of the file.
     markdown = '---\n' + yaml.dump(metadata) + '\n---\n' + markdown

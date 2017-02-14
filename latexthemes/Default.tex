@@ -44,7 +44,7 @@
 \usepackage[$geometry$$papersize$]{geometry} % Page margins
 
 \usepackage{graphicx} % Required for including pictures
-\graphicspath{{Pictures/}} % Specifies the directory where pictures are stored
+\graphicspath{{$imagepath$}} % Specifies the directory where pictures are stored
 
 \usepackage{lipsum} % Inserts dummy text
 
@@ -545,7 +545,7 @@ addtohook={%
 \coordinate [below=12cm] (midpoint) at (current page.north);
 \node at (current page.north west)
 {\begin{tikzpicture}[remember picture,overlay]
-\node[anchor=north west,inner sep=0pt] at (0,0) {\includegraphics[width=\paperwidth]{/home/cadel/Programming/GaaS/latexthemes/Pictures/background}}; % Background image
+\node[anchor=north west,inner sep=0pt] at (0,0) {\includegraphics[width=\paperwidth]{$imagepath$/background}}; % Background image
 \draw[anchor=north] (midpoint) node [fill=ocre!30!white,fill opacity=0.6,text opacity=1,inner sep=1cm]{\Huge\centering\bfseries\sffamily\parbox[c][][t]{\paperwidth}{\centering $title$\\[15pt] % Book title
 {\Large $subtitle$}\\[20pt] % Subtitle
 {\huge $author$}}}; % Author name
@@ -577,7 +577,7 @@ addtohook={%
 
 %\usechapterimagefalse % If you don't want to include a chapter image, use this to toggle images off - it can be enabled later with \usechapterimagetrue
 
-\chapterimage{/home/cadel/Programming/GaaS/latexthemes/Pictures/chapter_head_1.pdf} % Table of contents heading image
+\chapterimage{$imagepath$/chapter_head_1.pdf} % Table of contents heading image
 
 \pagestyle{empty} % No headers
 
@@ -589,7 +589,7 @@ addtohook={%
 
 \part{Grammar}
 
-\chapterimage{/home/cadel/Programming/GaaS/latexthemes/Pictures/chapter_head_2.pdf} % Chapter heading image
+\chapterimage{$imagepath$/chapter_head_2.pdf} % Chapter heading image
 
 $body$
 
