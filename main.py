@@ -33,9 +33,11 @@ def index():
 
     print(lexicon_file_string)
 
-    filename = generate(markdown_file_strings, lexicon_file_string, settings)
-
-    return filename
+    try:
+        filename = generate(markdown_file_strings, lexicon_file_string, settings)
+        return filename
+    except Exception as e:
+        return 'ERROR' + str(e)
 
 
 @app.route('/download')

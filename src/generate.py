@@ -333,7 +333,13 @@ def convert_lexicon(lexicon_string, lexicon_columns):
                          'pronunciation': line[lexicon_columns['pronunciation']],
                          'part_of_speech': line[lexicon_columns['part_of_speech']]}
             lexicon[line[lexicon_columns['word']]] = word_data
+
         except IndexError:
-            pass
+            # Ignore empty lines
+            if len(line) != 0:
+                error = ('Could not correctly read CSV file! '
+                         'Check that your column numbers are correct. '
+                         'The error appears in the line: ' + ','.join(line))
+                raise Exception(error)
 
     return lexicon
