@@ -161,6 +161,7 @@ def generate_latex(markdown, lexicon, lexicon_columns=LEXICON_COLUMN_DEFAULTS,
     filter_path = os.path.join(base_directory, 'filters', 'LaTeX.py')
 
     print('Generating...')
+    print(pandoc_arguments, filter_path)
     try:
         pypandoc.convert_text(markdown, format='md', to='pdf',
                             outputfile=temp_path,
