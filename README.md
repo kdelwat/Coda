@@ -1,6 +1,6 @@
 # Coda
 
-*This is the server implementation. For the front-end, please see [Supra](https://www.github.com/kdelwat/supra).*
+*This is the server implementation. For the front-end, please see [LingTools](https://www.github.com/kdelwat/LingTools).*
 
 Coda is a web tool which helps with the creation of professional-looking
 language reference grammars from sources written in an extended version of
