@@ -26,8 +26,6 @@ def index():
     for key in available_settings:
         settings[key] = request.form.get(key, None)
 
-    print(settings)
-
     try:
         # Loop through the files posted to the endpoint, reading all
         # files as strings.
@@ -41,7 +39,7 @@ def index():
 
         filename = generate(markdown_file_strings, lexicon_file_string,
                             settings)
-        print('RECEIVED FILENAME: ' + filename)
+
         return filename
     except Exception as e:
         return 'ERROR' + str(type(e).__name__) + ': ' + str(e)

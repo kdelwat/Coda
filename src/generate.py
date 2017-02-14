@@ -56,13 +56,9 @@ dictionary: $dictionary
 
 
 def generate(markdown_file_strings, lexicon_file, settings):
-    print('Generate called!')
     concatenated_markdown = '\n'.join(markdown_file_strings)
 
     lexicon_columns = read_lexicon_columns(settings)
-
-    print('LEXICON COLUMNS:')
-    print(lexicon_columns)
 
     if settings['format'] == 'HTML':
         filename = generate_HTML(concatenated_markdown, lexicon_file,
@@ -106,10 +102,9 @@ def generate_latex(markdown, lexicon, lexicon_columns=LEXICON_COLUMN_DEFAULTS,
     '''Takes a markdown string, a lexicon CSV string, and a number of settings.
     Creates a PDF document and returns the filename.'''
 
-    print('Generating LaTeX')
     template_directory = os.path.join(base_directory, 'themes', 'latex')
     image_path = os.path.join(template_directory, 'images')
-    print('TEMPLATE DIRECTORY: ' + template_directory)
+
     # Create the lexicon as a LaTeX string.
     dictionary_string = create_latex_dictionary(lexicon, lexicon_columns)
 
@@ -138,7 +133,7 @@ def generate_latex(markdown, lexicon, lexicon_columns=LEXICON_COLUMN_DEFAULTS,
 
     # Format metadata as YAML and add it before the rest of the file.
     markdown = '---\n' + yaml.dump(metadata) + '\n---\n' + markdown
-    print(metadata)
+
     # Create list of pandoc settings, including template file
     pandoc_arguments = ['--standalone',
                         '--toc',
@@ -149,28 +144,22 @@ def generate_latex(markdown, lexicon, lexicon_columns=LEXICON_COLUMN_DEFAULTS,
     template_name = 'Default.tex'
     template_path = os.path.join(template_directory, template_name)
     pandoc_arguments.append('--template={0}'.format(template_path))
-    print('TEMPLATE_PATH: ' +template_path)
 
     # Create temporary filename for output
     temp_filename = '{0}.pdf'.format(str(time.time()))
     temp_path = os.path.join(base_directory, 'temp', temp_filename)
 
-    print('OUTPUT: ' + temp_path)
-
     # Define the filters to use
     filter_path = os.path.join(base_directory, 'filters', 'LaTeX.py')
 
-    print('Generating...')
-    print(pandoc_arguments, filter_path)
     try:
         pypandoc.convert_text(markdown, format='md', to='pdf',
-                            outputfile=temp_path,
-                            extra_args=pandoc_arguments,
-                            filters=[filter_path])
+                              outputfile=temp_path,
+                              extra_args=pandoc_arguments,
+                              filters=[filter_path])
     except Exception as e:
         print(str(type(e).__name__) + ': ' + str(e))
 
-    print('Generated: ' + temp_filename)
     return temp_filename
 
 
