@@ -10,7 +10,8 @@ from src.generate import generate
 home_directory = os.path.expanduser('~')
 os.environ.setdefault('PYPANDOC_PANDOC', os.path.join(home_directory, '.local',
                                                       'bin', 'pandoc'))
-os.environ['PATH'] += os.pathsep + '/usr/bin/xelatex'
+os.environ['PATH'] += os.pathsep + '/usr/bin/'
+print(os.environ['PATH'])
 
 app = Flask(__name__)
 
