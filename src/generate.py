@@ -223,6 +223,10 @@ def create_html_dictionary(lexicon_string, lexicon_columns):
     # Group words by letter
     groups = get_lexicon_groups(lexicon_string, lexicon_columns)
 
+    # If the lexicon is blank, don't include it
+    if len(groups) == 0:
+        return ''
+
     entry_template = string.Template(HTML_DICTIONARY_ENTRY_TEMPLATE)
 
     for group in groups:
@@ -240,6 +244,10 @@ def create_latex_dictionary(lexicon_string, lexicon_columns):
 
     # Group words by letter
     groups = get_lexicon_groups(lexicon_string, lexicon_columns)
+
+    # If the lexicon is blank, don't include it
+    if len(groups) == 0:
+        return ''
 
     entry_template = string.Template(DICTIONARY_ENTRY_TEMPLATE)
 
