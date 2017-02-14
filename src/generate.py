@@ -144,7 +144,7 @@ def generate_latex(markdown, lexicon, lexicon_columns=LEXICON_COLUMN_DEFAULTS,
     pandoc_arguments.append('--template={0}'.format(template_path))
 
     # Create temporary filename for output
-    temp_filename = 'grammar.pdf'
+    temp_filename = '{0}.pdf'.format(str(time.time()))
     temp_path = os.path.join(base_directory, 'temp', temp_filename)
 
     # Define the filters to use
@@ -207,8 +207,8 @@ def generate_HTML(markdown, lexicon, lexicon_columns=LEXICON_COLUMN_DEFAULTS,
     html = load_words_from_lexicon(html, lexicon, lexicon_columns)
 
     # Save the HTML to a temporary file
-    # temp_filename = 'temp/{0}.html'.format(str(time.time()))
-    temp_filename = 'grammar.html'
+    temp_filename = '{0}.html'.format(str(time.time()))
+
     with open(os.path.join(base_directory, 'temp', temp_filename), 'w') as f:
         f.write(html)
 
