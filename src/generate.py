@@ -138,7 +138,7 @@ def generate_latex(markdown, lexicon, lexicon_columns=LEXICON_COLUMN_DEFAULTS,
 
     # Format metadata as YAML and add it before the rest of the file.
     markdown = '---\n' + yaml.dump(metadata) + '\n---\n' + markdown
-
+    print(metadata)
     # Create list of pandoc settings, including template file
     pandoc_arguments = ['--standalone',
                         '--toc',
