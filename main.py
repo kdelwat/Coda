@@ -2,6 +2,7 @@ from flask import Flask, request, send_file, url_for, after_this_request
 import os
 import pypandoc
 import io
+import sys
 
 from src.generate import generate
 
@@ -23,22 +24,27 @@ def index():
     for key in available_settings:
         settings[key] = request.form.get(key, None)
 
-    # Loop through the files posted to the endpoint, reading all
-    # files as strings.
-    markdown_file_strings = []
-    lexicon_file_string = None
-    for filename, blob in request.files.items():
-        if filename.endswith('.csv'):
-            lexicon_file_string = str(blob.read(), 'utf-8')
-        else:
-            markdown_file_strings.append(str(blob.read(), 'utf-8'))
+    print(settings)
 
     try:
+        # Loop through the files posted to the endpoint, reading all
+        # files as strings.
+        markdown_file_strings = []
+        lexicon_file_string = None
+        for filename, blob in request.files.items():
+            if filename.endswith('.csv'):
+                lexicon_file_string = str(blob.read(), 'utf-8')
+            else:
+                markdown_file_strings.append(str(blob.read(), 'utf-8'))
+
+        print(markdown_file_strings)
         filename = generate(markdown_file_strings, lexicon_file_string,
                             settings)
+        print(filename)
+        sys.exit(0)
         return filename
     except Exception as e:
-        return 'ERROR' + str(e)
+        return 'ERROR' + str(type(e).__name__) + ': ' + str(e)
 
 
 @app.route('/download')
@@ -85,4 +91,4 @@ def check_pandoc_on_startup():
 
 if __name__ == '__main__':
     check_pandoc_on_startup()
-    app.run(debug=True)
+    app.run(debug=True, host='0.0.0.0')
