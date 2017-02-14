@@ -5,6 +5,9 @@ import io
 
 from src.generate import generate
 
+# Set Pandoc binary location
+os.environ.setdefault('PYPANDOC_PANDOC', '/usr/bin/pandoc')
+
 app = Flask(__name__)
 
 available_settings = ['grammarTitle', 'grammarSubtitle', 'author', 'format',
