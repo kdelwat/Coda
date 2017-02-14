@@ -159,6 +159,7 @@ def generate_latex(markdown, lexicon, lexicon_columns=LEXICON_COLUMN_DEFAULTS,
                               filters=[filter_path])
     except Exception as e:
         print(str(type(e).__name__) + ': ' + str(e))
+        raise Exception('Error in Pandoc conversion:' + str(e))
 
     return temp_filename
 
