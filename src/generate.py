@@ -198,7 +198,7 @@ def generate_HTML(markdown, lexicon, lexicon_columns=LEXICON_COLUMN_DEFAULTS,
         pandoc_arguments.append('--include-in-header={0}'.format(full_path))
 
     # Define the filters to use
-    filter_path = os.path.join(base_directory, 'filters', 'new_HTML.py')
+    filter_path = os.path.join(base_directory, 'filters', 'HTML.py')
 
     # Get the generated HTML as a string
     html = pypandoc.convert_text(markdown, format='md', to='html',
