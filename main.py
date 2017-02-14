@@ -20,8 +20,6 @@ def index():
     for key in available_settings:
         settings[key] = request.form.get(key, None)
 
-    print(settings)
-
     # Loop through the files posted to the endpoint, reading all
     # files as strings.
     markdown_file_strings = []
@@ -37,8 +35,6 @@ def index():
                             settings)
         return filename
     except Exception as e:
-        print(type(e).__name__)
-        print(e)
         return 'ERROR' + str(e)
 
 
@@ -46,8 +42,6 @@ def index():
 def download():
     filename = request.args.get('filename')
     filepath = os.path.join('temp', filename)
-
-    print('Received request with filename {0}'.format(filename))
 
     if filename.endswith('.html'):
         mimetype = 'text/html; charset=utf-8'
