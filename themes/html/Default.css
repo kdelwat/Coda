@@ -203,6 +203,17 @@ tr.header {
 .lexicon-local {
   font-weight: bold; }
 
+/* Image formatting */
+.figure {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 2em 0; }
+  .figure img {
+    width: 75%; }
+  .figure .caption {
+    font-style: italic; }
+
 #header > .title {
   font-weight: 300; }
 

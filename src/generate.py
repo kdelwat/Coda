@@ -13,7 +13,7 @@ LEXICON_COLUMN_DEFAULTS = {'word': 0, 'local': 1, 'part_of_speech': 3,
 
 base_directory = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-with open(os.path.join(base_directory, 'latexthemes', 'Dictionary.tex')) as f:
+with open(os.path.join(base_directory, 'themes', 'latex', 'Dictionary.tex')) as f:
     DICTIONARY_TEMPLATE = f.read()
 
 DEFINITION_TEMPLATE = '''
@@ -102,7 +102,7 @@ def generate_latex(markdown, lexicon, lexicon_columns=LEXICON_COLUMN_DEFAULTS,
     '''Takes a markdown string, a lexicon CSV string, and a number of settings.
     Creates a PDF document and returns the filename.'''
 
-    template_directory = os.path.join(base_directory, 'latexthemes')
+    template_directory = os.path.join(base_directory, 'themes', 'latex')
     image_path = os.path.join(template_directory, 'images')
 
     # Create the lexicon as a LaTeX string.
@@ -189,7 +189,7 @@ def generate_HTML(markdown, lexicon, lexicon_columns=LEXICON_COLUMN_DEFAULTS,
     html_name = '{0}.html'.format(theme)
     css_name = '{0}.css'.format(theme)
 
-    theme_directory = os.path.join(base_directory, 'themes')
+    theme_directory = os.path.join(base_directory, 'themes', 'html')
 
     header_files = [html_name, 'before.html', css_name, 'after.html']
 

@@ -1,3 +1,5 @@
 __pycache__
 *.pyc
 tags
+.sass-cache
+.vscode
