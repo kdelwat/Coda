@@ -155,16 +155,20 @@ def generate_latex(markdown, lexicon, lexicon_columns=LEXICON_COLUMN_DEFAULTS,
     temp_filename = '{0}.pdf'.format(str(time.time()))
     temp_path = os.path.join(base_directory, 'temp', temp_filename)
 
-    print('OUTPUT: ' + temp_filename)
+    print('OUTPUT: ' + temp_path)
 
     # Define the filters to use
     filter_path = os.path.join(base_directory, 'filters', 'LaTeX.py')
 
     print('Generating...')
-    pypandoc.convert_text(markdown, format='md', to='pdf',
-                          outputfile=temp_path,
-                          extra_args=pandoc_arguments,
-                          filters=[filter_path])
+    try:
+        pypandoc.convert_text(markdown, format='md', to='pdf',
+                            outputfile=temp_path,
+                            extra_args=pandoc_arguments,
+                            filters=[filter_path])
+    except Exception as e:
+        print(str(type(e).__name__) + ': ' + str(e))
+
     print('Generated: ' + temp_filename)
     return temp_filename
 
