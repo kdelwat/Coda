@@ -2,11 +2,13 @@ import panflute as pf
 import string
 
 EXAMPLE_TEMPLATE = '''
+\\exdisplay
 \\begingl[aboveglftskip=-2.25pt]
 \\gla $target//
 \\glc $gloss//
 \\glft `$native'//
 \\endgl
+\\xe
 '''
 
 EXAMPLE_BLOCK_TEMPLATE = '''
