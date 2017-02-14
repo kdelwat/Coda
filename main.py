@@ -37,10 +37,9 @@ def index():
             else:
                 markdown_file_strings.append(str(blob.read(), 'utf-8'))
 
-        print(markdown_file_strings)
         filename = generate(markdown_file_strings, lexicon_file_string,
                             settings)
-        print(filename)
+        print('RECEIVED FILENAME: ' + filename)
         sys.exit(0)
         return filename
     except Exception as e:
