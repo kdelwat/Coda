@@ -91,7 +91,7 @@ def read_lexicon_columns(settings):
     # Add an entry to overrides for each column included in the request.
     for old, new in equivalents.items():
         if old in settings:
-            columns[new] = int(settings[old])
+            columns[new] = int(settings[old]) - 1
 
     return columns
 
