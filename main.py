@@ -40,7 +40,6 @@ def index():
         filename = generate(markdown_file_strings, lexicon_file_string,
                             settings)
         print('RECEIVED FILENAME: ' + filename)
-        sys.exit(0)
         return filename
     except Exception as e:
         return 'ERROR' + str(type(e).__name__) + ': ' + str(e)
