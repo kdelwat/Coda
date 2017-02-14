@@ -59,7 +59,7 @@ def generate(markdown_file_strings, lexicon_file, settings):
     concatenated_markdown = '\n'.join(markdown_file_strings)
 
     lexicon_columns = read_lexicon_columns(settings)
-    print(lexicon_columns)
+
     if settings['format'] == 'HTML':
         filename = generate_HTML(concatenated_markdown, lexicon_file,
                                  lexicon_columns=lexicon_columns,
@@ -90,8 +90,6 @@ def read_lexicon_columns(settings):
 
     # Add an entry to overrides for each column included in the request.
     for old, new in equivalents.items():
-        print(old, new)
-        print(settings)
         if old in settings:
             columns[new] = int(settings[old])
 
@@ -214,7 +212,6 @@ def generate_HTML(markdown, lexicon, lexicon_columns=LEXICON_COLUMN_DEFAULTS,
     temp_filename = 'grammar.html'
     with open(os.path.join(base_directory, 'temp', temp_filename), 'w') as f:
         f.write(html)
-
 
     return temp_filename
 

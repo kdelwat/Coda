@@ -31,6 +31,8 @@ def index():
         else:
             markdown_file_strings.append(str(blob.read(), 'utf-8'))
 
+    print(lexicon_file_string)
+
     filename = generate(markdown_file_strings, lexicon_file_string, settings)
 
     return filename
@@ -39,13 +41,15 @@ def index():
 @app.route('/download')
 def download():
     filename = request.args.get('filename')
+    filepath = os.path.join('temp', filename)
+
     print('Received request with filename {0}'.format(filename))
 
-    if filename.endswith('.md'):
-        mimetype = 'text/markdown; charset=utf-8'
+    if filename.endswith('.html'):
+        mimetype = 'text/html; charset=utf-8'
 
-    return send_file(filename, mimetype=mimetype, as_attachment=True,
-                     attachment_filename='grammar.md')
+    return send_file(filepath, mimetype=mimetype, as_attachment=True,
+                     attachment_filename='grammar.html')
 
 
 def check_pandoc_on_startup():
