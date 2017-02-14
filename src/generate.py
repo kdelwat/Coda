@@ -70,7 +70,7 @@ def generate(markdown_file_strings, lexicon_file, settings):
     elif settings['format'] == 'LaTeX PDF':
         filename = generate_latex(concatenated_markdown, lexicon_file,
                                   lexicon_columns=lexicon_columns,
-                                  theme=settings['theme'],
+                                  layout=settings['layout'],
                                   title=settings['grammarTitle'],
                                   subtitle=settings['grammarSubtitle'],
                                   author=settings['author'])
@@ -97,7 +97,7 @@ def read_lexicon_columns(settings):
 
 
 def generate_latex(markdown, lexicon, lexicon_columns=LEXICON_COLUMN_DEFAULTS,
-                   theme='Default', title='My language', subtitle='A grammar',
+                   title='My language', subtitle='A grammar',
                    author='An author', layout='A4'):
     '''Takes a markdown string, a lexicon CSV string, and a number of settings.
     Creates a PDF document and returns the filename.'''
@@ -106,7 +106,6 @@ def generate_latex(markdown, lexicon, lexicon_columns=LEXICON_COLUMN_DEFAULTS,
 
     # Create the lexicon as a LaTeX string.
     dictionary_string = create_latex_dictionary(lexicon, lexicon_columns)
-
 
     # Create a metadata block and add it to the beginning of the markdown
     # string.
@@ -140,7 +139,7 @@ def generate_latex(markdown, lexicon, lexicon_columns=LEXICON_COLUMN_DEFAULTS,
                         '--latex-engine=xelatex',
                         '--top-level-division=chapter']
 
-    template_name = '{0}.tex'.format(theme)
+    template_name = 'Default.tex'
     template_path = os.path.join(template_directory, template_name)
     pandoc_arguments.append('--template={0}'.format(template_path))
 
@@ -156,7 +155,7 @@ def generate_latex(markdown, lexicon, lexicon_columns=LEXICON_COLUMN_DEFAULTS,
                           extra_args=pandoc_arguments,
                           filters=[filter_path])
 
-    return temp_path
+    return temp_filename
 
 
 def generate_HTML(markdown, lexicon, lexicon_columns=LEXICON_COLUMN_DEFAULTS,

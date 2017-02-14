@@ -9,7 +9,7 @@ app = Flask(__name__)
 available_settings = ['grammarTitle', 'grammarSubtitle', 'author', 'format',
                       'theme', 'csvColumnWord', 'csvColumnLocal',
                       'csvColumnDefinition', 'csvColumnPronunciation',
-                      'csvColumnPartOfSpeech']
+                      'csvColumnPartOfSpeech', 'layout']
 
 
 @app.route('/', methods=['POST'])
@@ -31,12 +31,12 @@ def index():
         else:
             markdown_file_strings.append(str(blob.read(), 'utf-8'))
 
-    print(lexicon_file_string)
-
     try:
-        filename = generate(markdown_file_strings, lexicon_file_string, settings)
+        filename = generate(markdown_file_strings, lexicon_file_string,
+                            settings)
         return filename
     except Exception as e:
+        print(type(e).__name__)
         return 'ERROR' + str(e)
 
 
@@ -49,9 +49,15 @@ def download():
 
     if filename.endswith('.html'):
         mimetype = 'text/html; charset=utf-8'
+        attachment_filename = 'Grammar.html'
+    elif filename.endswith('.pdf'):
+        mimetype = 'application/pdf'
+        attachment_filename = 'Grammar.pdf'
+    else:
+        return 'File not found', 404
 
     return send_file(filepath, mimetype=mimetype, as_attachment=True,
-                     attachment_filename='grammar.html')
+                     attachment_filename=attachment_filename)
 
 
 def check_pandoc_on_startup():
