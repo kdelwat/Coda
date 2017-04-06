@@ -203,6 +203,10 @@ def generate_latex(markdown,
         print(str(type(e).__name__) + ': ' + str(e))
         raise Exception('Error in Pandoc conversion:' + str(e))
 
+    with open(os.path.join(base_directory, 'error.log'), 'w') as f:
+        f.write("Latex generation is returning: " + '{0}.pdf'.format(
+            temp_filename))
+
     return '{0}.pdf'.format(temp_filename)
 
 

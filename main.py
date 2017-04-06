@@ -4,19 +4,24 @@ import pypandoc
 import io
 import sys
 
+sys.stdout = sys.stderr
+
 from src.generate import generate
+
+base_directory = os.path.dirname(os.path.abspath(__file__))
 
 # Set Pandoc binary location
 home_directory = os.path.expanduser('~')
-os.environ.setdefault('PYPANDOC_PANDOC', os.path.join(home_directory, '.local',
-                                                      'bin', 'pandoc'))
+os.environ.setdefault('PYPANDOC_PANDOC',
+                      os.path.join(home_directory, '.local', 'bin', 'pandoc'))
 
 app = Flask(__name__)
 
-available_settings = ['grammarTitle', 'grammarSubtitle', 'author', 'format',
-                      'theme', 'csvColumnWord', 'csvColumnLocal',
-                      'csvColumnDefinition', 'csvColumnPronunciation',
-                      'csvColumnPartOfSpeech', 'layout']
+available_settings = [
+    'grammarTitle', 'grammarSubtitle', 'author', 'format', 'theme',
+    'csvColumnWord', 'csvColumnLocal', 'csvColumnDefinition',
+    'csvColumnPronunciation', 'csvColumnPartOfSpeech', 'layout'
+]
 
 
 @app.route('/', methods=['POST'])
@@ -40,6 +45,7 @@ def index():
         filename = generate(markdown_file_strings, lexicon_file_string,
                             settings)
 
+        print("In index function, returning file: " + filename)
         return filename
     except Exception as e:
         return 'ERROR' + str(type(e).__name__) + ': ' + str(e)
@@ -48,7 +54,9 @@ def index():
 @app.route('/download')
 def download():
     filename = request.args.get('filename')
-    filepath = os.path.join('temp', filename)
+
+    filepath = os.path.join(base_directory, 'temp', filename)
+    print("Downloading filepath: " + filepath)
 
     if filename.endswith('.html'):
         mimetype = 'text/html; charset=utf-8'
@@ -66,8 +74,11 @@ def download():
 
     os.remove(filepath)
 
-    return send_file(file_object, mimetype=mimetype, as_attachment=True,
-                     attachment_filename=attachment_filename)
+    return send_file(
+        file_object,
+        mimetype=mimetype,
+        as_attachment=True,
+        attachment_filename=attachment_filename)
 
 
 def check_pandoc_on_startup():
