@@ -8,7 +8,9 @@ from subprocess import call
 from itertools import groupby
 import yaml
 
-JUNK_FILE_SUFFIXES = ['aux', 'bcf', 'idx', 'log', 'ptc', 'run.xml', 'toc']
+JUNK_FILE_SUFFIXES = [
+    'tex', 'aux', 'bcf', 'idx', 'log', 'ptc', 'run.xml', 'toc'
+]
 
 LEXICON_COLUMN_DEFAULTS = {
     'word': 0,
