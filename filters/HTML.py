@@ -36,8 +36,7 @@ def create_example(number, elem):
     # For each example in the list, extract each part of the example.
     # Then substitute the parts into the example template.
     for example in elem.content:
-        content = [line.strip() for line in
-                   pf.stringify(example).split(',')]
+        content = [line.strip() for line in pf.stringify(example).split(',')]
 
         parts = {}
         parts['target'] = strip_example(content[0])
@@ -75,13 +74,16 @@ def create_definition(elem):
 def linguistic_features(elem, doc):
     ''' Detect individual syntax features and delegate to their creation
     functions.'''
-    if type(elem) == pf.OrderedList and elem.style == 'Example':
-        return create_example(elem.start, elem)
-    elif type(elem) == pf.Para and pf.stringify(elem).startswith('(*)'):
-        return create_rule(elem)
-    elif type(elem) == pf.Code:
-        return create_definition(elem)
-    else:
+    try:
+        if type(elem) == pf.OrderedList and elem.style == 'Example':
+            return create_example(elem.start, elem)
+        elif type(elem) == pf.Para and pf.stringify(elem).startswith('(*)'):
+            return create_rule(elem)
+        elif type(elem) == pf.Code:
+            return create_definition(elem)
+        else:
+            return elem
+    except:
         return elem
 
 

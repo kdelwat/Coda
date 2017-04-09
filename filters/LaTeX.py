@@ -32,15 +32,14 @@ def create_example(number, elem):
     # For each example in the list, extract each part of the example.
     # Then substitute the parts into the example template.
     for example in elem.content:
-        content = [line.strip() for line in
-                   pf.stringify(example).split(',')]
+        content = [line.strip() for line in pf.stringify(example).split(',')]
 
         parts = {}
         parts['target'] = content[0]
 
         # Format the gloss in small caps
-        parts['gloss'] = ' '.join(['\\textsc{' + x + '}' for x in
-                                   content[1].split(' ')])
+        parts['gloss'] = ' '.join(
+            ['\\textsc{' + x + '}' for x in content[1].split(' ')])
 
         parts['native'] = content[2]
 
@@ -51,8 +50,8 @@ def create_example(number, elem):
     block_settings = {'examples': '\n'.join(examples)}
     example_block = string.Template(EXAMPLE_BLOCK_TEMPLATE)
 
-    return pf.RawBlock(example_block.substitute(block_settings),
-                       format='latex')
+    return pf.RawBlock(
+        example_block.substitute(block_settings), format='latex')
 
 
 def create_rule(elem):
@@ -75,13 +74,16 @@ def create_definition(elem):
 def linguistic_features(elem, doc):
     ''' Detect individual syntax features and delegate to their creation
     functions.'''
-    if type(elem) == pf.OrderedList and elem.style == 'Example':
-        return create_example(elem.start, elem)
-    elif type(elem) == pf.Para and pf.stringify(elem).startswith('(*)'):
-        return create_rule(elem)
-    elif type(elem) == pf.Code:
-        return create_definition(elem)
-    else:
+    try:
+        if type(elem) == pf.OrderedList and elem.style == 'Example':
+            return create_example(elem.start, elem)
+        elif type(elem) == pf.Para and pf.stringify(elem).startswith('(*)'):
+            return create_rule(elem)
+        elif type(elem) == pf.Code:
+            return create_definition(elem)
+        else:
+            return elem
+    except:
         return elem
 
 
