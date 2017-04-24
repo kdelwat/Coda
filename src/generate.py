@@ -66,7 +66,7 @@ dictionary: $dictionary
 
 
 def generate(markdown_file_strings, lexicon_file, settings):
-    concatenated_markdown = '\n'.join(markdown_file_strings)
+    concatenated_markdown = '\n\n'.join(markdown_file_strings)
 
     lexicon_columns = read_lexicon_columns(settings)
 
@@ -139,10 +139,12 @@ def generate_latex(markdown,
             'fontsize': '11pt'
         },
         'A5': {
-            'papersize': 'a5paper',
+            'papersize':
+            'a5paper',
             'geometry':
             'top=1.5cm,bottom=1.5cm,left=1.75cm,right=1.75cm,headsep=10pt,',
-            'fontsize': '12pt'
+            'fontsize':
+            '12pt'
         }
     }
 
@@ -206,8 +208,8 @@ def generate_latex(markdown,
         raise Exception('Error in Pandoc conversion:' + str(e))
 
     with open(os.path.join(base_directory, 'error.log'), 'w') as f:
-        f.write("Latex generation is returning: " + '{0}.pdf'.format(
-            temp_filename))
+        f.write("Latex generation is returning: " +
+                '{0}.pdf'.format(temp_filename))
 
     return '{0}.pdf'.format(temp_filename)
 
