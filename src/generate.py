@@ -238,7 +238,7 @@ def generate_HTML(markdown,
     # Create the lexicon as a Markdown string and add it to the end of the
     # file.
     dictionary_string = create_html_dictionary(lexicon, lexicon_columns)
-    markdown = markdown + '\n\n#Lexicon\n\n' + dictionary_string
+    markdown = markdown + '\n\n' + dictionary_string
 
     # Create list of pandoc settings, including theme files
     pandoc_arguments = ['--standalone', '--toc', '--smart', '--html-q-tags']
